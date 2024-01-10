@@ -1,12 +1,14 @@
 package com.dataHarbour.engine.Service;
 
+import com.dataHarbour.engine.model.ResponseModel;
+
 import java.util.List;
 
 public interface ImporterService {
 
-    int createEntry(List<String> content);
+    ResponseModel createEntry(List<String> content);
 
-    int updateEntry(List<String> content);
+    ResponseModel updateEntry(List<String> content);
 
-    int removeEntry(List<String> content);
+    ResponseModel removeEntry(List<String> content);
 }

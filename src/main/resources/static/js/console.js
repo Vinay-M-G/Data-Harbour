@@ -21,6 +21,12 @@ function uploadFile(){
                 alert("Data uploaded successfully")
                 window.location.reload()
             }
+
+            if(response.status === 409){
+                alert("Data upload failed, check browser console for more details")
+                response.json().then(body => console.log(body))
+            }
+
         }).catch(error => {
             alert("Error while updating data");
         })
@@ -52,10 +58,17 @@ function uploadContent(){
             body : requestData,
             mode : "same-origin"
         }).then(response => {
+            
             if(response.status === 200){
                 alert("Data uploaded successfully")
                 window.location.reload()
             }
+
+            if(response.status === 409){
+                alert("Data upload failed, check browser console for more details")
+                response.json().then(body => console.log(body))
+            }
+
         }).catch(error => {
             alert("Error while updating data")
         })

@@ -23,6 +23,11 @@ public class ResponseModel {
         this.errors = errors;
     }
 
+    public ResponseModel(final String status, final List<String> errors){
+        this.status = status;
+        this.errors = errors;
+    }
+
 
 
 }

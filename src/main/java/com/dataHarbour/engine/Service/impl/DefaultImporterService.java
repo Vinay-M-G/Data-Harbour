@@ -5,6 +5,7 @@ import com.dataHarbour.engine.Service.DataBaseHandler;
 import com.dataHarbour.engine.Service.ImporterService;
 import com.dataHarbour.engine.Utils.DataHarbourConstants;
 import com.dataHarbour.engine.model.DataConnectionModel;
+import com.dataHarbour.engine.model.ResponseModel;
 import com.dataHarbour.engine.model.UpdateOperationModel;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,15 +42,18 @@ public class DefaultImporterService implements ImporterService {
     private ApplicationContext context;
 
     @Override
-    public int createEntry(final List<String> content) {
+    public ResponseModel createEntry(final List<String> content) {
         if(CollectionUtils.isEmpty(content)){
-            return -1;
+            return null;
         }
+
         String dataBaseId = (String) sessionService.getAttribute(DataHarbourConstants.DATA_BASE_ID);
         DataConnectionModel connectionModel = getDataConnectionModel(dataBaseId);
+        List<String> errors = new ArrayList<>();
 
         if(connectionModel != null)
         {
+
             String[] headerAttributes = content.get(0).split(dataHarbourConfiguration.getDelimiter());
             StringBuilder builder = new StringBuilder(INSERT_STATEMENT + headerAttributes[1] + "(");
 
@@ -67,19 +71,24 @@ public class DefaultImporterService implements ImporterService {
 
                 String statement =  builder + "('" + content.get(index).replace(dataHarbourConfiguration.getDelimiter(), DataHarbourConstants.VALUE_DELIMITER) + "')";
                 LOG.info(String.format("Executing Insert Statement : %s " , statement));
-                dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                int result = dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                if(result == -1){
+                    errors.add("Error Executing Create Statement : " + statement);
+                }
             }
         }
 
-        return 0;
+        return new ResponseModel(StringUtils.EMPTY, errors);
 
     }
 
     @Override
-    public int updateEntry(final List<String> content) {
+    public ResponseModel updateEntry(final List<String> content) {
         if(CollectionUtils.isEmpty(content)){
-            return -1;
+            return null;
         }
+
+        List<String> errors = new ArrayList<>();
 
         String CONDITION_PATTERN = "%s = '%s' AND";
         String SETTER_PATTERN = "%s = '%s' , ";
@@ -127,19 +136,24 @@ public class DefaultImporterService implements ImporterService {
                 String statement = String.format(UPDATE_STATEMENT, tableName, setValue, condValue);
 
                 LOG.info("Executing update statement : " + statement);
-                dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                int result = dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                if(result == -1){
+                    errors.add("Error Executing Update Statement : " + statement);
+                }
             }
 
         }
 
-        return 0;
+        return new ResponseModel(StringUtils.EMPTY, errors);
     }
 
     @Override
-    public int removeEntry(List<String> content) {
+    public ResponseModel removeEntry(List<String> content) {
         if(CollectionUtils.isEmpty(content)){
-            return -1;
+            return null;
         }
+
+        List<String> errors = new ArrayList<>();
 
         String columnToString = "%s = '%s' AND";
         String dataBaseId = (String) sessionService.getAttribute(DataHarbourConstants.DATA_BASE_ID);
@@ -162,10 +176,15 @@ public class DefaultImporterService implements ImporterService {
 
                 String statement =  builder + value;
                 LOG.info(String.format("Executing Remove Statement : %s " , statement));
-                dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                int result = dataBaseHandler.runStatement(statement, connectionModel.getJdbcTemplate());
+                if(result == -1){
+                    errors.add("Error Executing Remove Statement : " + statement);
+                }
+
             }
         }
-        return 0;
+
+        return new ResponseModel(StringUtils.EMPTY, errors);
     }
 
     private DataConnectionModel getDataConnectionModel(final String connectionId){
