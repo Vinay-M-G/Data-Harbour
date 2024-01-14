@@ -58,7 +58,7 @@ function uploadContent(){
             body : requestData,
             mode : "same-origin"
         }).then(response => {
-            
+
             if(response.status === 200){
                 alert("Data uploaded successfully")
                 window.location.reload()

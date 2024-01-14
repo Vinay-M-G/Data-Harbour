@@ -33,10 +33,13 @@ public class BaseController {
         if(null == multipartFile || multipartFile.isEmpty()){
             throw new MissingServletRequestParameterException("File not Found", DATA_FILE);
         }
+
         if(!multipartFile.getOriginalFilename().endsWith(".txt")){
             throw new FileUploadException("File is not of right format. Accepted format .txt");
         }
+
         ResponseModel response = dataParser.parseTextData(multipartFile);
+
         if(response == null){
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
