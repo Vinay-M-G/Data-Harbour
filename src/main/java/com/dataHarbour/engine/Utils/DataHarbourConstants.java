@@ -18,4 +18,5 @@ public class DataHarbourConstants {
     public static final String DATA_BASE_ID = "dataBaseId";
 
     public static final String DEFAULT = "default";
+    public static final String FAILED = "FAILED";
 }

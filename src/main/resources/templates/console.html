@@ -20,8 +20,8 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <h1 class="navbar-text" style="color: #FD691A;">
+    <nav class="navbar navbar-light bg-info">
+        <h1 class="navbar-text" style="color:black;">
             Data Harbour Console
         </h1>
     </nav>
@@ -40,13 +40,16 @@
                     </div>
                 </nav>
 
+                <div class="container-fluid" style="border-bottom: 1px solid dimgray; padding-top: 10px;">
+                </div>
+
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-uploadContent" role="tabpanel"
                         aria-labelledby="nav-uploadContent-tab" style="padding-top: 10px;">
                         <form>
                             <div class="form-group">
                                 <textarea class="form-control" id="dataContent" rows="20" spellcheck="false"
-                                    style="padding: 10px; border: 2px solid black;" placeholder="Provide Data Input"></textarea>
+                                    style="padding: 10px; border: 1px solid black;" placeholder="Provide Data Input"></textarea>
                             </div>
                             <button type="button" class="btn btn-primary" th:onclick="uploadContent()">Import Content</button>
                         </form>
@@ -56,7 +59,7 @@
                         <div class="fileUpload" style="padding-top : 10px">
                             <form>
                                 <div class="form-group">
-                                    <label for="datafile">Upload Text File</label>
+                                    <label for="datafile"><h5>Upload Text File</h5></label>
                                     <input type="file" class="form-control-file" id="datafile">
                                 </div>
                                 <button type="button" class="btn btn-primary" th:onclick="uploadFile()">Import
@@ -67,14 +70,13 @@
                 </div>
             </div>
             <div class="col-3" style="padding-top: 10px;">
-                <label class="control-label">Data Base</label>
                 <div th:if="${databases != null and not #lists.isEmpty(databases)}">
-                    <select id="databaseId">
+                    <label for="databaseId"> <h5> Select Data Base </h5> </label>
+                    <select class="custom-select custom-select-lg mb-3" id="databaseId">
                         <option th:each="dropDownItem : ${databases}" th:value="${dropDownItem}"
-                            th:text="${dropDownItem}" />
+                        th:text="${dropDownItem}"/>
                     </select>
                 </div>
-
             </div>
         </div>
 

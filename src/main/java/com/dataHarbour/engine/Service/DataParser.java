@@ -1,14 +1,13 @@
 package com.dataHarbour.engine.Service;
 
+import com.dataHarbour.engine.model.ResponseModel;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface DataParser {
 
-    void parseTextData(MultipartFile multipartFile);
+    ResponseModel parseTextData(MultipartFile multipartFile);
 
     void parseDataFromExcel();
 
-    void parseTextData(String content);
+    ResponseModel parseTextData(String content);
 }

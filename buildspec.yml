@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region {{AWS region}} | docker login --username AWS --password-stdin {{AWS Account Id}}.dkr.ecr.{{AWS region}}.amazonaws.com
+      - echo Log in to ECR success full
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean install
+      - docker tag app-dataHarbour:latest {{AWS Account Id}}.dkr.ecr.{{AWS region}}.amazonaws.com/app-dataHarbour:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push {{AWS Account Id}}.dkr.ecr.{{AWS region}}.amazonaws.com/app-dataHarbour:latest
+      - echo Writing image definitions file...
+      - cat imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
+    - target/Data-Harbour-0.0.1-SNAPSHOT.jar
